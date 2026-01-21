@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const API_BASE = "http://127.0.0.1:8000";
+import Field from "../../../components/ui/Field";
+import { userCreateGroup } from "../../../hooks/userCreateGroup";
 
 export default function CreateGroupPage() {
   const router = useRouter();
+  const { createGroup, loading } = userCreateGroup();
 
   const [form, setForm] = useState({
     group_code: "",
@@ -16,52 +18,22 @@ export default function CreateGroupPage() {
     monthly_amount: "",
     start_date: "",
     pnp: 0,
-    trasury: 0, // ⚠️ keeping same key as backend
+    trasury: 0, // backend key preserved
   });
-
-  const [loading, setLoading] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      const res = await fetch(`${API_BASE}/groups/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          group_value: Number(form.group_value),
-          total_members: Number(form.total_members),
-          duration_months: Number(form.duration_months),
-          monthly_amount: Number(form.monthly_amount),
-          pnp: Number(form.pnp),
-          trasury: Number(form.trasury),
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to create group");
-
-      router.push("/groups");
-    } catch (err) {
-      alert("Error creating group");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    await createGroup(form);
+    router.push("/groups");
   }
 
   return (
     <div className="space-y-8 max-w-3xl">
-
       {/* HEADER */}
       <div>
         <h1 className="text-3xl font-semibold">Create Group</h1>
@@ -75,7 +47,6 @@ export default function CreateGroupPage() {
         onSubmit={handleSubmit}
         className="bg-[#111827] border border-white/10 rounded-xl p-6 space-y-6"
       >
-        {/* GROUP CODE */}
         <Field
           label="Group Code"
           name="group_code"
@@ -84,7 +55,6 @@ export default function CreateGroupPage() {
           onChange={handleChange}
         />
 
-        {/* VALUE + MONTHLY */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Field
             label="Group Value"
@@ -104,7 +74,6 @@ export default function CreateGroupPage() {
           />
         </div>
 
-        {/* MEMBERS + DURATION */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Field
             label="Total Members"
@@ -122,7 +91,6 @@ export default function CreateGroupPage() {
           />
         </div>
 
-        {/* DATE */}
         <Field
           label="Start Date"
           name="start_date"
@@ -131,7 +99,6 @@ export default function CreateGroupPage() {
           onChange={handleChange}
         />
 
-        {/* PNP + TREASURY */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Field
             label="PNP"
@@ -149,7 +116,6 @@ export default function CreateGroupPage() {
           />
         </div>
 
-        {/* ACTIONS */}
         <div className="flex justify-end gap-4 pt-4">
           <button
             type="button"
@@ -173,25 +139,6 @@ export default function CreateGroupPage() {
           </button>
         </div>
       </form>
-    </div>
-  );
-}
-
-/* ---------- REUSABLE FIELD ---------- */
-
-function Field({ label, ...props }) {
-  return (
-    <div className="space-y-1">
-      <label className="text-sm text-gray-400">{label}</label>
-      <input
-        {...props}
-        className="
-          w-full bg-[#0f172a] border border-white/10
-          rounded-lg px-4 py-3 text-sm
-          placeholder-gray-500
-          focus:outline-none focus:border-blue-500
-        "
-      />
     </div>
   );
 }
