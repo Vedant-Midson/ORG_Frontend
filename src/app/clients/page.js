@@ -5,25 +5,28 @@ import Link from "next/link";
 
 import StatusBadge from "@/components/ui/StatusBadge";
 import { useClients } from "@/hooks/useClient";
+import ClientViewModal from "@/components/clients/ClientViewModal";
 
 export default function ClientsPage() {
   const [search, setSearch] = useState("");
   const { clients, loading } = useClients();
 
+  const [selectedClient, setSelectedClient] = useState(null);
+
   /* ---------------- FILTER ---------------- */
-const normalizedSearch = search.trim().toLowerCase();
+  const normalizedSearch = search.trim().toLowerCase();
 
-const filtered = Array.isArray(clients)
-  ? clients.filter((c) => {
-      if (!normalizedSearch) return true;
+  const filtered = Array.isArray(clients)
+    ? clients.filter((c) => {
+        if (!normalizedSearch) return true;
 
-      return (
-        c.full_name.toLowerCase().includes(normalizedSearch) ||
-        c.min_number.includes(normalizedSearch)
-      );
-    })
-  : [];
-
+        return (
+          c.full_name.toLowerCase().includes(normalizedSearch) ||
+          c.min_number.includes(normalizedSearch)
+        );
+      })
+    : [];
+  console.log(">>>>>>>>>>>>>>>>>>>>>>", clients);
   /* ---------------- DATE FORMAT ---------------- */
   function formatDate(dateStr) {
     if (!dateStr) return "-";
@@ -36,7 +39,6 @@ const filtered = Array.isArray(clients)
 
   return (
     <div className="space-y-8">
-
       {/* HEADER */}
       <div className="flex items-center justify-between">
         <div>
@@ -76,9 +78,7 @@ const filtered = Array.isArray(clients)
 
         <div className="bg-[#111827] border border-white/10 rounded-lg p-4">
           <p className="text-sm text-gray-400">Total Clients</p>
-          <p className="text-2xl font-semibold mt-1">
-            {clients.length}
-          </p>
+          <p className="text-2xl font-semibold mt-1">{clients.length}</p>
         </div>
       </div>
 
@@ -100,7 +100,10 @@ const filtered = Array.isArray(clients)
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={7} className="px-6 py-10 text-center text-gray-500">
+                <td
+                  colSpan={7}
+                  className="px-6 py-10 text-center text-gray-500"
+                >
                   Loading clients...
                 </td>
               </tr>
@@ -115,7 +118,44 @@ const filtered = Array.isArray(clients)
                   <td className="px-6 py-4 font-medium">{client.min_number}</td>
                   <td className="px-6 py-4">{client.full_name}</td>
                   <td className="px-6 py-4 text-gray-300">{client.mobile}</td>
-                  <td className="px-6 py-4">{client.groups}</td>
+                  <td className="px-6 py-4">
+                    {Array.isArray(client.groups) &&
+                    client.groups.length > 0 ? (
+                      <div className="flex flex-wrap gap-2 items-center">
+                        {client.groups.slice(0, 2).map((g) => (
+                          <span
+                            key={g.id}
+                            className="
+            px-2 py-1 text-xs rounded-md
+            bg-white/5 text-gray-300
+            border border-white/10
+          "
+                          >
+                            {g.group_code}
+                          </span>
+                        ))}
+
+                        {client.groups.length > 2 && (
+                          <span
+                            title={client.groups
+                              .map((g) => g.group_code)
+                              .join(", ")}
+                            className="
+            px-2 py-1 text-xs rounded-md
+            bg-white/10 text-gray-400
+            border border-white/10
+            cursor-help
+          "
+                          >
+                            +{client.groups.length - 2} more
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-gray-500 text-xs">—</span>
+                    )}
+                  </td>
+
                   <td className="px-6 py-4 text-gray-400">
                     {formatDate(client.created_at)}
                   </td>
@@ -123,7 +163,10 @@ const filtered = Array.isArray(clients)
                     <StatusBadge status={client.status} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="text-blue-400 hover:text-blue-300 text-sm">
+                    <button
+                      onClick={() => setSelectedClient(client)}
+                      className="text-blue-400 hover:text-blue-300 text-sm"
+                    >
                       View
                     </button>
                   </td>
@@ -132,7 +175,10 @@ const filtered = Array.isArray(clients)
 
             {!loading && filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-6 py-10 text-center text-gray-500">
+                <td
+                  colSpan={7}
+                  className="px-6 py-10 text-center text-gray-500"
+                >
                   No clients found
                 </td>
               </tr>
@@ -140,6 +186,12 @@ const filtered = Array.isArray(clients)
           </tbody>
         </table>
       </div>
+      {selectedClient && (
+        <ClientViewModal
+          client={selectedClient}
+          onClose={() => setSelectedClient(null)}
+        />
+      )}
     </div>
   );
 }

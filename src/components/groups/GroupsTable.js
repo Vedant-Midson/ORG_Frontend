@@ -19,8 +19,8 @@ export default function GroupsTable({ groups = [], search = "", onView }) {
             <th className="px-6 py-4 text-left">Group</th>
             <th className="px-6 py-4 text-left">Value</th>
             <th className="px-6 py-4 text-left">Installment</th>
-            <th className="px-6 py-4 text-left">PNP</th>
-            <th className="px-6 py-4 text-left">Treasury</th>
+            <th className="px-6 py-4 text-left">Monthy Amount</th>
+            <th className="px-6 py-4 text-left">Total Members</th>
             <th className="px-6 py-4 text-left">Status</th>
             <th className="px-6 py-4 text-right">Action</th>
           </tr>
@@ -46,9 +46,9 @@ export default function GroupsTable({ groups = [], search = "", onView }) {
                 <InstallmentProgress value={group.installment_done} />
               </td>
 
-              <td className="px-6 py-4">{group.pnp}</td>
+              <td className="px-6 py-4">{group.monthly_amount}</td>
 
-              <td className="px-6 py-4">{group.treasury}</td>
+              <td className="px-6 py-4">{group.total_members}</td>
 
               <td className="px-6 py-4">
                 <StatusBadge status={group.status} />

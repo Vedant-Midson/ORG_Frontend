@@ -25,21 +25,26 @@ export default function GroupsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between">
-        <h1 className="text-3xl font-semibold">Groups</h1>
-        <Link href="/membership">
-          <button
-            className="
+      <div className="flex items-center justify-between">
+  <h1 className="text-3xl font-semibold">Groups</h1>
+
+  <div className="flex items-center gap-3">
+    <Link href="/membership">
+      <button
+        className="
           bg-gradient-to-r from-blue-600 to-orange-500
-          px-5 py-2 rounded-lg text-sm font-medium
+          px-4 py-2 rounded-lg text-sm font-medium
           hover:opacity-90 transition
         "
-          >
-            + Create Membership
-          </button>
-        </Link>
-        <CreateGroupButton />
-      </div>
+      >
+        + Create Membership
+      </button>
+    </Link>
+
+    <CreateGroupButton />
+  </div>
+</div>
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <input
           placeholder="Search group"
@@ -51,7 +56,7 @@ export default function GroupsPage() {
             focus:border-blue-500
           "
         />
-        <SummaryCard title="Active Groups" value="12" />
+        <SummaryCard title="Active Groups" value={groups.length} />
         <SummaryCard title="Completed Groups" value="5" />
       </div>
 

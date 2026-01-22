@@ -20,8 +20,9 @@ export function userGroups() {
             startDate: g.start_date,
             status: g.status || "Active",
             installment_done: g.installments_done || 0,
-            pnp: g.pnp || 0,
-            treasury: g.treasury || 0,
+            total_members: g.total_members || 0,
+            monthly_amount: g.monthly_amount || 0,
+            
           })),
         );
       } catch (err) {

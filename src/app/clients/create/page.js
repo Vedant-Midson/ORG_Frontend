@@ -17,6 +17,7 @@ export default function AddMemberPage() {
     min_number: "",
     full_name: "",
     mobile: "",
+    collector_name: "",
     profile: "",
     reference_code: "",
     nature_of_business: "",
@@ -64,6 +65,7 @@ export default function AddMemberPage() {
         nature_of_business: "",
         address: "",
         pincode: "",
+        collector_name: "",
         status: "ACTIVE",
       });
     } catch (err) {
@@ -123,6 +125,13 @@ export default function AddMemberPage() {
             label="Mobile Number"
             name="mobile"
             value={form.mobile}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="Collector Name"
+            name="collector_name"
+            value={form.collector_name}
             onChange={handleChange}
             required
           />

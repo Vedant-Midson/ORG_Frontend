@@ -13,12 +13,11 @@ export default function CreateGroupPage() {
   const [form, setForm] = useState({
     group_code: "",
     group_value: "",
-    total_members: 15,
     duration_months: 15,
     monthly_amount: "",
     start_date: "",
     pnp: 0,
-    trasury: 0, // backend key preserved
+    treasury: 0, // backend key preserved
   });
 
   function handleChange(e) {
@@ -75,13 +74,7 @@ export default function CreateGroupPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Field
-            label="Total Members"
-            name="total_members"
-            type="number"
-            value={form.total_members}
-            onChange={handleChange}
-          />
+     
           <Field
             label="Duration (Months)"
             name="duration_months"
@@ -111,7 +104,7 @@ export default function CreateGroupPage() {
             label="Treasury"
             name="trasury"
             type="number"
-            value={form.trasury}
+            value={form.treasury}
             onChange={handleChange}
           />
         </div>
